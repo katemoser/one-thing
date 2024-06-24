@@ -11,6 +11,12 @@ more managable routine that you are more likely to stick to.
 
 1. Set up your dev database:
 
+2. Seed database:
+
+```bash
+npx prisma db seed
+```
+
 2. Run the development server:
 
 ```bash
