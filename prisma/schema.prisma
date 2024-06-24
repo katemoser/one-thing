@@ -38,6 +38,9 @@ model Assignment {
     userTaskId Int
     userTask UserTask @relation(fields: [userTaskId], references: [id])
     assignedAt DateTime @default(now())
+    completedAt DateTime?
+    cancelledAt DateTime?
+    lastPostponedAt DateTime?
     pointValue Int @default(1)
     status AssignmentStatus @default(PENDING)
 }

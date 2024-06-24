@@ -27,7 +27,8 @@ async function completeAssignment(assignmentId: number) {
             id: assignmentId
         },
         data: {
-            status: "COMPLETED"
+            status: "COMPLETED",
+            completedAt: new Date()
         }
     });
     console.log("assignment completed:", completed);
@@ -47,7 +48,8 @@ async function postponeAssignment(assignmentId: number) {
         },
         data: {
             status: "PENDING",
-            pointValue: { increment: 1 }
+            pointValue: { increment: 1 },
+            lastPostponedAt: new Date()
 
         }
     });
@@ -64,7 +66,8 @@ async function cancelAssignment(assignmentId: number) {
             id: assignmentId
         },
         data: {
-            status: "CANCELLED"
+            status: "CANCELLED",
+            cancelledAt: new Date()
         }
     });
 
