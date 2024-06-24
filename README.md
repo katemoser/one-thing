@@ -9,7 +9,9 @@ more managable routine that you are more likely to stick to.
 
 ## Getting Started
 
-First, run the development server:
+1. Set up your dev database:
+
+2. Run the development server:
 
 ```bash
 npm run dev

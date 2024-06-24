@@ -1,0 +1,60 @@
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url = env("DATABASE_URL")
+}
+
+model User {
+    username String @id
+    email String @unique
+    createdAt DateTime @default(now())
+    tasks UserTask[]
+}
+
+model Task {
+    id Int @id @default(autoincrement())
+    title String
+    description String?
+    type TaskType @default(CORE)
+    users UserTask[]
+}
+
+model UserTask { //many to many between user and task
+    id Int @id @default(autoincrement()) // TODO: change this to slugify username and task title
+    username String
+    user User @relation(fields: [username], references: [username])
+    taskId Int
+    task Task @relation(fields: [taskId], references:[id])
+    schedule Schedule @default(EVERYDAY) // TODO: this is going to get updated to be something like cronjob!
+    assignments Assignment[]
+}
+
+model Assignment {
+    id Int @id @default(autoincrement())
+    userTaskId Int
+    userTask UserTask @relation(fields: [userTaskId], references: [id])
+    assignedAt DateTime @default(now())
+    pointValue Int @default(1)
+    status AssignmentStatus @default(PENDING)
+}
+
+enum TaskType {
+    CORE
+    PERSONAL
+}
+
+enum Schedule {
+    EVERYDAY
+    EVERYWEEK
+    EVERYMONTH
+}
+
+enum AssignmentStatus {
+    COMPLETED
+    PENDING
+    CANCELLED
+}
