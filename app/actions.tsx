@@ -2,6 +2,31 @@
 
 import prisma from "./lib/prisma";
 
+/**
+ * takes a username and finds the next thing they should be assigned
+ *
+ * looks at pending tasks (to reassign) and userTasks (to create a new one)
+ */
+async function selectNextAssignment(username: string){
+
+    const userTasks = await prisma.userTask.findMany({
+        where:{
+            username: username,
+        },
+        include: {
+            task: true,
+            assignments: {
+                where: {
+                    status: "PENDING"
+                }
+            }
+        }
+    })
+    console.log("tasks including pending assignments:", userTasks);
+    return userTasks;
+
+}
+
 /** Create new assignment */
 
 async function createAssignment(userTaskId: number) {
@@ -79,5 +104,6 @@ export {
     createAssignment,
     completeAssignment,
     postponeAssignment,
-    cancelAssignment
+    cancelAssignment,
+    selectNextAssignment
 };
