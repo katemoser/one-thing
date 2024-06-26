@@ -1,19 +1,16 @@
 import prisma from "../lib/prisma";
+import { selectNextAssignment } from "../actions";
 
 export default async function Page() {
 
     // TODO: Change this to run the "select next task" function
 
-    const tasks = await prisma.task.findMany({
-        where: { type: "CORE" }
-    });
+    const assignment = await selectNextAssignment("Kate");
+    console.log("THIS IS THE NEXT ASSIGNMENT:", assignment);
 
     return (
-        <>
-            <p> This is where your task assignment will be:</p>
-            <ul>
-                {tasks.map(task => <li key={task.id}>{task.title}</li>) }
-            </ul>
-        </>
+        <div>
+            <h3>{assignment?.userTask.task.title || "no task"}</h3>
+        </div>
     );
 }

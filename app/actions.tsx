@@ -1,6 +1,89 @@
 "use server";
 
 import prisma from "./lib/prisma";
+import _ from 'lodash';
+
+
+/**
+ * takes a username and finds the next thing they should be assigned
+ *
+ * looks at pending tasks (to reassign) and userTasks (to create a new one)
+ */
+async function selectNextAssignment(username: string) {
+
+    const userTasks = await prisma.userTask.findMany({
+        where: {
+            username: username,
+        },
+        include: {
+            task: true,
+            assignments: {
+                where: {
+                    status: "PENDING"
+                }
+            }
+        }
+    });
+    console.log("tasks including pending assignments:", userTasks);
+
+    // high level idea -- just on EVERYDAY tasks:
+    // look at the user's tasks
+    // look at completed assignments for today; these don't need to be done right now.
+    // create an assignment for any task with an EVERYDAY schedule that
+    // doesn't have a completed assignment or PENDING assignment for today
+    // select an assignment randomly from any that haven't been postponed yet;
+    // if there are none, select one that has been postponed today
+
+    // TODO: what to do with pending assignments from yesterday/past days
+    // TODO: find better datetime library -- moment.js?
+
+    // create today's assignments if needed! TODO: put this in updateAssignments below
+    const today = new Date();
+
+    for (let task of userTasks) {
+        if (task.schedule === "EVERYDAY") {
+            const todayAssignments = task.assignments.filter(a => {
+                return a.assignedAt.toDateString() === today.toDateString();
+            });
+            if (todayAssignments.length === 0) {
+                createAssignment(task.id);
+            }
+        }
+    }
+
+    // get all today's assignments
+
+    const assignments = await prisma.assignment.findMany({
+        where: {
+            userTask: {
+                username: username,
+            },
+            assignedAt: {
+                gte: new Date(today.toDateString()), // create new date object passing in just today's date.
+            },
+            status: "PENDING",
+
+        },
+        include: {
+            userTask: {
+                include: {
+                    task: true
+                }
+            }
+        }
+    });
+
+    console.log("today's assignments:", assignments);
+
+    return _.sample(assignments);
+
+}
+
+/** Update assignments */
+
+async function updateAssignments(username: string) {
+    // put assignment update stuff in here!
+}
 
 /** Create new assignment */
 
@@ -79,5 +162,6 @@ export {
     createAssignment,
     completeAssignment,
     postponeAssignment,
-    cancelAssignment
+    cancelAssignment,
+    selectNextAssignment
 };
