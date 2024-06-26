@@ -42,10 +42,10 @@ async function selectNextAssignment(username: string) {
 
     for (let task of userTasks) {
         if (task.schedule === "EVERYDAY") {
-            const pendingAssignments = task.assignments.filter(a => {
-                return a.status === "PENDING" && a.assignedAt.toDateString() === today.toDateString();
+            const todayAssignments = task.assignments.filter(a => {
+                return a.assignedAt.toDateString() === today.toDateString();
             });
-            if (pendingAssignments.length === 0) {
+            if (todayAssignments.length === 0) {
                 createAssignment(task.id);
             }
         }
