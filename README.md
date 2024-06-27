@@ -13,6 +13,14 @@ more managable routine that you are more likely to stick to.
 
 2. Seed database:
 
+If necessary, reset the db first:
+
+```bash
+npx prisma db push --force-reset
+```
+
+Then run the seed file:
+
 ```bash
 npx prisma db seed
 ```

@@ -21,26 +21,14 @@ async function selectNextAssignment(username: string) {
 
     // get all today's Pending assignments if there isn't one assigned current
     const today = new Date();
-    const assignments = await prisma.assignment.findMany({
+
+    //check if there is a current assignment:
+    let nextAssignment = await prisma.assignment.findFirst({
         where: {
+            isCurrent: true,
             userTask: {
                 username: username,
-            },
-            assignedAt: {
-                gte: new Date(today.toDateString()), // create new date object passing in just today's date.
-            },
-            OR: [
-                {
-                    lastPostponedAt: null,
-                },
-                {
-                    lastPostponedAt: {
-                        lte: new Date(today.setMinutes(today.getMinutes() -2)) //create timestamp for 2 minutes ago
-                    }
-                }
-            ],
-            status: "PENDING",
-
+            }
         },
         include: {
             userTask: {
@@ -51,10 +39,55 @@ async function selectNextAssignment(username: string) {
         }
     });
 
-    // console.log("today's assignments:", assignments);
-    // change it up so that if you've already postponed a task today, it's not going to showup for a certain amount of time.
+    // If there's not a current assignment, assign a new one:
+    if (!nextAssignment) {
 
-    return _.sample(assignments);
+        const assignments = await prisma.assignment.findMany({
+            where: {
+                userTask: {
+                    username: username,
+                },
+                assignedAt: {
+                    gte: new Date(today.toDateString()), // create new date object passing in just today's date.
+                },
+                OR: [
+                    {
+                        lastPostponedAt: null,
+                    },
+                    {
+                        lastPostponedAt: {
+                            lte: new Date(today.setMinutes(today.getMinutes() - 2)) //create timestamp for 2 minutes ago
+                        }
+                    }
+                ],
+                status: "PENDING",
+
+            },
+            include: {
+                userTask: {
+                    include: {
+                        task: true
+                    }
+                }
+            }
+        });
+
+        // console.log("today's assignments:", assignments);
+        // change it up so that if you've already postponed a task today, it's not going to showup for a certain amount of time.
+        nextAssignment = _.sample(assignments) || null; // if there aren't any, assign to null instead of undefined
+    }
+    if (nextAssignment) {
+
+        await prisma.assignment.update({
+            where: {
+                id: nextAssignment.id
+            },
+            data: {
+                isCurrent: true
+            }
+        });
+    }
+    return nextAssignment;
 
 }
 
@@ -121,7 +154,8 @@ async function completeAssignment(assignmentId: number) {
         },
         data: {
             status: "COMPLETED",
-            completedAt: new Date()
+            completedAt: new Date(),
+            isCurrent: false
         }
     });
     console.log("assignment completed:", completed);
@@ -143,7 +177,8 @@ async function postponeAssignment(assignmentId: number) {
         data: {
             status: "PENDING",
             pointValue: { increment: 1 },
-            lastPostponedAt: new Date()
+            lastPostponedAt: new Date(),
+            isCurrent: false
 
         }
     });
@@ -161,7 +196,8 @@ async function cancelAssignment(assignmentId: number) {
         },
         data: {
             status: "CANCELLED",
-            cancelledAt: new Date()
+            cancelledAt: new Date(),
+            isCurrent: false,
         }
     });
 
