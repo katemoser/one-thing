@@ -30,3 +30,7 @@ npx prisma db seed
 ```bash
 npm run dev
 ```
+
+## Brainstorm
+
+[EXP Ideas](/docs/exp-roadmap.md)
