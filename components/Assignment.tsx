@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 
 import { Button } from "./ui/button";
-import { cancelAssignment, completeAssignment, postponeAssignment } from "@/app/actions";
+import { cancelAssignment, completeAssignment, postponeAssignment, calculateExp } from "@/app/actions";
 
 type assignmentProps = {
     title: string,
@@ -17,10 +17,12 @@ type assignmentProps = {
 }
 //TODO: typing and docs
 export function Assignment({ title, description, id }: assignmentProps) {
+
+    let exp = calculateExp(id);
     return (
         <Card className="w-2/3" >
             <CardHeader >
-                <CardTitle className="text-center">{title}</CardTitle>
+                <CardTitle className="text-center">{title}  EXP: {exp}</CardTitle>
                 <CardDescription>{description || "more info coming soon"}</CardDescription>
             </CardHeader>
             <CardFooter className="space-x-2">

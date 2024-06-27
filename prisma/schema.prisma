@@ -13,6 +13,7 @@ model User {
     email String @unique
     createdAt DateTime @default(now())
     tasks UserTask[]
+    exp Int @default(0)
 }
 
 model Task {
@@ -31,6 +32,7 @@ model UserTask { //many to many between user and task
     task Task @relation(fields: [taskId], references:[id])
     schedule Schedule @default(EVERYDAY) // TODO: this is going to get updated to be something like cronjob!
     assignments Assignment[]
+    difficulty Int @default(3)
 }
 
 model Assignment {
@@ -41,7 +43,8 @@ model Assignment {
     completedAt DateTime?
     cancelledAt DateTime?
     lastPostponedAt DateTime?
-    pointValue Int @default(1)
+    pointValue Int?
+    numPostponements Int @default(0)
     status AssignmentStatus @default(PENDING)
     isCurrent Boolean @default(false)
 }

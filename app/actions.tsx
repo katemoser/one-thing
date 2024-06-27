@@ -65,7 +65,7 @@ async function selectNextAssignment(username: string) {
             include: {
                 userTask: {
                     include: {
-                        task: true
+                        task: true,
                     }
                 }
             }
@@ -164,7 +164,7 @@ async function postponeAssignment(assignmentId: number) {
         },
         data: {
             status: "PENDING",
-            pointValue: { increment: 1 },
+            numPostponements: { increment: 1 },
             lastPostponedAt: new Date(),
             isCurrent: false
 
@@ -194,10 +194,35 @@ async function cancelAssignment(assignmentId: number) {
     // return cancelled;
 }
 
+/**
+ * calculates the exp that will be earned by completing this assignment
+ *
+ * */
+async function calculateExp(assignmentId: number){
+    const BASE_MULTIPLIER = 10;
+    const POSTPONEMENT_MULTIPLIER = 5;
+
+    const assignment = await prisma.assignment.findFirstOrThrow({
+        where:{
+            id: assignmentId,
+        },
+        include: {
+            userTask: true
+        }
+    })
+
+    // TODO: Work on this!
+    const exp = (
+        (assignment.userTask.difficulty * BASE_MULTIPLIER) - (assignment.numPostponements * POSTPONEMENT_MULTIPLIER))
+    console.log("assignment:", assignment)
+
+    return exp;
+}
 export {
     createAssignment,
     completeAssignment,
     postponeAssignment,
     cancelAssignment,
-    selectNextAssignment
+    selectNextAssignment,
+    calculateExp
 };
