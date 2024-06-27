@@ -1,5 +1,6 @@
 import prisma from "../lib/prisma";
 import { selectNextAssignment } from "../actions";
+import { Assignment } from "@/components/Assignment";
 
 export default async function Page() {
 
@@ -10,7 +11,15 @@ export default async function Page() {
 
     return (
         <div>
-            <h3>{assignment?.userTask.task.title || "no task"}</h3>
+            {assignment ?
+
+                <Assignment
+                    title={assignment.userTask.task.title}
+                    description={assignment.userTask.task.description}
+                    id={assignment.id}
+                />
+                : "NO TASKS LEFT"
+            }
         </div>
     );
 }
