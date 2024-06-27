@@ -51,7 +51,7 @@ async function selectNextAssignment(username: string) {
         }
     });
 
-    console.log("today's assignments:", assignments);
+    // console.log("today's assignments:", assignments);
     // change it up so that if you've already postponed a task today, it's not going to showup for a certain amount of time.
 
     return _.sample(assignments);
@@ -76,7 +76,7 @@ async function updateAssignments(username: string) {
             assignments: true
         }
     });
-    console.log("tasks including pending assignments:", userTasks);
+    // console.log("tasks including pending assignments:", userTasks);
 
     // TODO: find better datetime library -- moment.js?
 

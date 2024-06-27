@@ -18,7 +18,7 @@ type assignmentProps = {
 //TODO: typing and docs
 export function Assignment({ title, description, id }: assignmentProps) {
     return (
-        <Card className="w-2/3 m-8" >
+        <Card className="w-2/3" >
             <CardHeader >
                 <CardTitle className="text-center">{title}</CardTitle>
                 <CardDescription>{description || "more info coming soon"}</CardDescription>

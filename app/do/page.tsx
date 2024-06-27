@@ -1,6 +1,7 @@
 import prisma from "../lib/prisma";
 import { selectNextAssignment } from "../actions";
 import { Assignment } from "@/components/Assignment";
+import { AllComplete } from "@/components/AllComplete";
 
 export default async function Page() {
 
@@ -10,7 +11,7 @@ export default async function Page() {
     console.log("THIS IS THE NEXT ASSIGNMENT:", assignment);
 
     return (
-        <div>
+        <div className="p-8 container grid justify-items-center">
             {assignment ?
 
                 <Assignment
@@ -18,7 +19,8 @@ export default async function Page() {
                     description={assignment.userTask.task.description}
                     id={assignment.id}
                 />
-                : "NO TASKS LEFT"
+                :
+                <AllComplete />
             }
         </div>
     );
