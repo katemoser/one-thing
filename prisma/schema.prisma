@@ -43,6 +43,7 @@ model Assignment {
     lastPostponedAt DateTime?
     pointValue Int @default(1)
     status AssignmentStatus @default(PENDING)
+    isCurrent Boolean @default(false)
 }
 
 enum TaskType {
