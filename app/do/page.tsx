@@ -13,13 +13,13 @@ export default async function Page() {
         <div>
             {assignment ?
 
-            <Assignment
-                title={assignment.userTask.task.title}
-                description={assignment.userTask.task.description}
-                id={assignment.id}
+                <Assignment
+                    title={assignment.userTask.task.title}
+                    description={assignment.userTask.task.description}
+                    id={assignment.id}
                 />
                 : "NO TASKS LEFT"
-        }
+            }
         </div>
     );
 }

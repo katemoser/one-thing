@@ -10,15 +10,20 @@ import {
 import { Button } from "./ui/button";
 import { cancelAssignment, completeAssignment, postponeAssignment } from "@/app/actions";
 
+type assignmentProps = {
+    title: string,
+    description: string | null,
+    id: number
+}
 //TODO: typing and docs
-export function Assignment({ title, description, id }) {
+export function Assignment({ title, description, id }: assignmentProps) {
     return (
-        <Card className="" >
-            <CardHeader>
-                <CardTitle>{title}</CardTitle>
+        <Card className="w-2/3 m-8" >
+            <CardHeader >
+                <CardTitle className="text-center">{title}</CardTitle>
                 <CardDescription>{description || "more info coming soon"}</CardDescription>
             </CardHeader>
-            <CardFooter>
+            <CardFooter className="space-x-2">
                 <Button
                     variant="secondary"
                     onClick={() => postponeAssignment(id)}>
