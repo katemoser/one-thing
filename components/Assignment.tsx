@@ -9,22 +9,51 @@ import {
 } from "@/components/ui/card";
 
 import { Button } from "./ui/button";
-import { cancelAssignment, completeAssignment, postponeAssignment, calculateExp } from "@/app/actions";
-
+import { cancelAssignment, completeAssignment, postponeAssignment } from "@/app/actions";
+import { calculateExp } from "@/app/lib/exp-utils";
+import { FIRST_TIME_BONUS } from "@/constants";
 // type assignmentProps = {
 //     title: string,
 //     description: string | null,
 //     id: number;
 // };
 //TODO: typing and docs
-export function AssignmentCard({ assignment }: { assignment: Assignment }) {
+export function AssignmentCard({ assignment }: { assignment: Assignment; }) {
 
-    // let exp = calculateExp(id);
+    let exp = calculateExp(assignment.difficulty, assignment.numPostponements);
     return (
         <Card className="w-2/3" >
-            <CardHeader >
-                <CardTitle className="text-center">{assignment.title}  Difficulty: {assignment.difficulty}</CardTitle>
+            <CardHeader className="container ">
+
+
+                <CardTitle className="text-center group flex py-6">{assignment.title}
+                    <div className="container">
+
+                        {/* <div>
+                            Difficulty:
+                        </div> */}
+                        <div>
+                            Exp: {exp}
+                        </div>
+                        {assignment.numPostponements === 0 &&
+                            <div>first time bonus: {FIRST_TIME_BONUS}</div>}
+                    </div>
+                    {/* <Card>
+                        <CardHeader>
+
+                            <CardTitle>
+                                Difficulty:
+                            </CardTitle>
+                            <CardDescription>
+                                Bonus:
+                            </CardDescription>
+                        </CardHeader>
+                    </Card> */}
+                </CardTitle>
+
                 <CardDescription>{assignment.description || "more info coming soon"}</CardDescription>
+
+
             </CardHeader>
             <CardFooter className="space-x-2">
                 <Button

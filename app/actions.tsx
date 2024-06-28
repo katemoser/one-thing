@@ -3,8 +3,10 @@
 import { revalidatePath } from "next/cache";
 import prisma from "./lib/prisma";
 import _ from 'lodash';
-import { BASE_DIFFICULTY_MULTIPLIER, POSTPONEMENT_MULTIPLIER } from "@/constants";
+// import { BASE_DIFFICULTY_MULTIPLIER, FIRST_TIME_BONUS, POSTPONEMENT_MULTIPLIER } from "@/constants";
 import { User } from "@prisma/client";
+import { calculateExp } from "./lib/exp-utils";
+import { FIRST_TIME_BONUS } from "@/constants";
 
 // TODO: find better datetime library -- moment.js?
 
@@ -173,7 +175,9 @@ async function completeAssignment(assignmentId: number) {
     });
 
     //assign exp to user
-    const exp = calculateExp(completed.userTask.difficulty, completed.numPostponements);
+    let exp = calculateExp(completed.userTask.difficulty, completed.numPostponements);
+    exp = completed.numPostponements === 0 ? exp + FIRST_TIME_BONUS : exp;
+
     const currUser = await getCurrUser() as User;
 
     await prisma.user.update({
@@ -235,29 +239,32 @@ async function cancelAssignment(assignmentId: number) {
  * calculates the exp earned by completing an assignment
  * TODO: this doesn't belong here anymore.
  * */
-function calculateExp(difficulty: number, numPostponements: number) {
+// function calculateExp(difficulty: number, numPostponements: number):Number {
 
-    // const assignment = await prisma.assignment.findFirstOrThrow({
-    //     where: {
-    //         id: assignmentId,
-    //     },
-    //     include: {
-    //         userTask: true
-    //     }
-    // });
+//     // const assignment = await prisma.assignment.findFirstOrThrow({
+//     //     where: {
+//     //         id: assignmentId,
+//     //     },
+//     //     include: {
+//     //         userTask: true
+//     //     }
+//     // });
 
-    // TODO: Work on this!
-    const exp = (
-        (difficulty * BASE_DIFFICULTY_MULTIPLIER) - (numPostponements * POSTPONEMENT_MULTIPLIER));
+//     // TODO: Work on this!
+//     let exp = (
+//         (difficulty * BASE_DIFFICULTY_MULTIPLIER) - (numPostponements * POSTPONEMENT_MULTIPLIER));
+//     // if hasn't been postponed yet, add on bonus:
 
-    return exp;
-}
+//     if (numPostponements === 0) exp += FIRST_TIME_BONUS;
+
+//     return exp;
+// }
 export {
     createAssignment,
     completeAssignment,
     postponeAssignment,
     cancelAssignment,
     selectNextAssignment,
-    calculateExp,
+    // calculateExp,
     getCurrUser
 };
