@@ -4,3 +4,11 @@ export type Task = {
   description: string;
   type: "CORE" | "PERSONAL"
 }
+
+export type Assignment = {
+  id: number;
+  title: string;
+  description: string | null;
+  difficulty: number;
+  numPostponements: number
+}

@@ -3,9 +3,22 @@
 import { revalidatePath } from "next/cache";
 import prisma from "./lib/prisma";
 import _ from 'lodash';
+import { BASE_DIFFICULTY_MULTIPLIER, POSTPONEMENT_MULTIPLIER } from "@/constants";
+import { User } from "@prisma/client";
 
 // TODO: find better datetime library -- moment.js?
 
+
+/********************USER ACTIONS*************** */
+
+async function getCurrUser() {
+    //TODO: update with actual curr user once login etc exists
+    return await prisma.user.findFirst({
+        where: {
+            username: "Kate"
+        }
+    });
+}
 /**
  * takes a username and finds the next thing they should be assigned
  *
@@ -26,7 +39,7 @@ async function selectNextAssignment(username: string) {
             userTask: {
                 username: username,
             },
-            assignedAt:{
+            assignedAt: {
                 gte: new Date(now.toDateString())
             }
         },
@@ -85,7 +98,15 @@ async function selectNextAssignment(username: string) {
             });
         }
     }
-    return nextAssignment;
+    if (nextAssignment === null) return null;
+
+    return {
+        id: nextAssignment.id,
+        title: nextAssignment.userTask.task.title,
+        description: nextAssignment.userTask.task.description,
+        difficulty: nextAssignment.userTask.difficulty,
+        numPostponements: nextAssignment.numPostponements,
+    };
 
 }
 
@@ -141,12 +162,28 @@ async function completeAssignment(assignmentId: number) {
         where: {
             id: assignmentId
         },
+        include: {
+            userTask: true
+        },
         data: {
             status: "COMPLETED",
             completedAt: new Date(),
             isCurrent: false
         }
     });
+
+    //assign exp to user
+    const exp = calculateExp(completed.userTask.difficulty, completed.numPostponements);
+    const currUser = await getCurrUser() as User;
+
+    await prisma.user.update({
+        where: {
+            username: currUser.username,
+        },
+        data: {
+            exp: {increment: exp}
+        }
+    })
     console.log("assignment completed:", completed);
     revalidatePath("/go");
     // return completed;
@@ -195,26 +232,23 @@ async function cancelAssignment(assignmentId: number) {
 }
 
 /**
- * calculates the exp that will be earned by completing this assignment
- *
+ * calculates the exp earned by completing an assignment
+ * TODO: this doesn't belong here anymore.
  * */
-async function calculateExp(assignmentId: number){
-    const BASE_MULTIPLIER = 10;
-    const POSTPONEMENT_MULTIPLIER = 5;
+function calculateExp(difficulty: number, numPostponements: number) {
 
-    const assignment = await prisma.assignment.findFirstOrThrow({
-        where:{
-            id: assignmentId,
-        },
-        include: {
-            userTask: true
-        }
-    })
+    // const assignment = await prisma.assignment.findFirstOrThrow({
+    //     where: {
+    //         id: assignmentId,
+    //     },
+    //     include: {
+    //         userTask: true
+    //     }
+    // });
 
     // TODO: Work on this!
     const exp = (
-        (assignment.userTask.difficulty * BASE_MULTIPLIER) - (assignment.numPostponements * POSTPONEMENT_MULTIPLIER))
-    console.log("assignment:", assignment)
+        (difficulty * BASE_DIFFICULTY_MULTIPLIER) - (numPostponements * POSTPONEMENT_MULTIPLIER));
 
     return exp;
 }
@@ -224,5 +258,6 @@ export {
     postponeAssignment,
     cancelAssignment,
     selectNextAssignment,
-    calculateExp
+    calculateExp,
+    getCurrUser
 };

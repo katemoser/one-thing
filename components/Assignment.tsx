@@ -1,4 +1,5 @@
-"use client"
+"use client";
+import { Assignment } from "@/app/lib/definitions";
 import {
     Card,
     CardDescription,
@@ -10,32 +11,32 @@ import {
 import { Button } from "./ui/button";
 import { cancelAssignment, completeAssignment, postponeAssignment, calculateExp } from "@/app/actions";
 
-type assignmentProps = {
-    title: string,
-    description: string | null,
-    id: number
-}
+// type assignmentProps = {
+//     title: string,
+//     description: string | null,
+//     id: number;
+// };
 //TODO: typing and docs
-export function Assignment({ title, description, id }: assignmentProps) {
+export function AssignmentCard({ assignment }: { assignment: Assignment }) {
 
-    let exp = calculateExp(id);
+    // let exp = calculateExp(id);
     return (
         <Card className="w-2/3" >
             <CardHeader >
-                <CardTitle className="text-center">{title}  EXP: {exp}</CardTitle>
-                <CardDescription>{description || "more info coming soon"}</CardDescription>
+                <CardTitle className="text-center">{assignment.title}  Difficulty: {assignment.difficulty}</CardTitle>
+                <CardDescription>{assignment.description || "more info coming soon"}</CardDescription>
             </CardHeader>
             <CardFooter className="space-x-2">
                 <Button
                     variant="secondary"
-                    onClick={() => postponeAssignment(id)}>
+                    onClick={() => postponeAssignment(assignment.id)}>
                     Do this later
                 </Button>
                 <Button
-                    onClick={() => completeAssignment(id)}>This is Done</Button>
+                    onClick={() => completeAssignment(assignment.id)}>This is Done</Button>
                 <Button
                     variant="destructive"
-                    onClick={() => cancelAssignment(id)}>
+                    onClick={() => cancelAssignment(assignment.id)}>
                     I won't do this today
                 </Button>
             </CardFooter>
