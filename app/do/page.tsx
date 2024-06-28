@@ -1,24 +1,43 @@
-import { selectNextAssignment } from "../actions";
-import { Assignment } from "@/components/Assignment";
+import { getCurrUser, selectNextAssignment } from "../actions";
+import { AssignmentCard } from "@/components/Assignment";
 import { AllComplete } from "@/components/AllComplete";
+import { User } from "@prisma/client";
+import { ExperienceTicker } from "@/components/ExperienceTicker";
+import { Card } from "@/components/ui/card";
 
 export default async function Page() {
 
-    const assignment = await selectNextAssignment("Kate");
-    console.log("THIS IS THE NEXT ASSIGNMENT:", assignment);
+    const currUser = await getCurrUser() as User;
+    console.log("current user:", currUser);
+
+    const next = await selectNextAssignment(currUser.username);
+
+    console.log("THIS IS THE NEXT ASSIGNMENT:", next);
 
     return (
-        <div className="p-8 container grid justify-items-center">
-            {assignment ?
+        <div className="container p-8 grid justify-items-center">
+            <div className="flex flex-row gap-2">
 
-                <Assignment
-                    title={assignment.userTask.task.title}
-                    description={assignment.userTask.task.description}
-                    id={assignment.id}
-                />
-                :
-                <AllComplete />
-            }
+                {/* <Card>user level</Card> */}
+
+
+                <ExperienceTicker exp={currUser.exp} />
+
+
+                {/* <Card>Num Tasks</Card> */}
+
+            </div>
+
+            <div className="p-8 container grid justify-items-center">
+                {next ?
+
+                    <AssignmentCard
+                        assignment={next}
+                    />
+                    :
+                    <AllComplete />
+                }
+            </div>
         </div>
     );
 }
