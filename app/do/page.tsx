@@ -2,12 +2,13 @@ import { getCurrUser, selectNextAssignment } from "../actions";
 import { AssignmentCard } from "@/components/Assignment";
 import { AllComplete } from "@/components/AllComplete";
 import { User } from "@prisma/client";
-import {ExperienceTicker} from "@/components/ExperienceTicker";
+import { ExperienceTicker } from "@/components/ExperienceTicker";
+import { Card } from "@/components/ui/card";
 
 export default async function Page() {
 
     const currUser = await getCurrUser() as User;
-    console.log("current user:", currUser)
+    console.log("current user:", currUser);
 
     const next = await selectNextAssignment(currUser.username);
 
@@ -15,8 +16,16 @@ export default async function Page() {
 
     return (
         <div className="container p-8 grid justify-items-center">
-            <div className="exp">
-                <ExperienceTicker exp={currUser.exp}/>
+            <div className="flex flex-row gap-2">
+
+                {/* <Card>user level</Card> */}
+
+
+                <ExperienceTicker exp={currUser.exp} />
+
+
+                {/* <Card>Num Tasks</Card> */}
+
             </div>
 
             <div className="p-8 container grid justify-items-center">

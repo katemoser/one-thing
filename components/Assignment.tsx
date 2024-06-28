@@ -29,14 +29,16 @@ export function AssignmentCard({ assignment }: { assignment: Assignment; }) {
                 <CardTitle className="text-center group flex py-6">{assignment.title}
                     <div className="container">
 
-                        {/* <div>
-                            Difficulty:
-                        </div> */}
+                        <div>
+                            Difficulty: {assignment.difficulty}
+                        </div>
                         <div>
                             Exp: {exp}
                         </div>
-                        {assignment.numPostponements === 0 &&
-                            <div>first time bonus: {FIRST_TIME_BONUS}</div>}
+                        <div className="bonus container text-xs p-3">
+                            {assignment.numPostponements === 0 &&
+                                <div className="">+{FIRST_TIME_BONUS} first time bonus</div>}
+                        </div>
                     </div>
                     {/* <Card>
                         <CardHeader>
