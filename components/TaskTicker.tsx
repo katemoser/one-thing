@@ -33,7 +33,9 @@ const RANGE_TO_DESCRIPTION = {
     "ALL": "since you started"
 }
 /**
- * This isn't doing quite what I want it to do
+ * This isn't doing quite what I want it to do -- not currently in use
+ *
+ * TODO: come back to this later
  *
  * It needs to get updated any time a new assignment is added
  */

@@ -3,8 +3,6 @@ import { AssignmentCard } from "@/components/Assignment";
 import { AllComplete } from "@/components/AllComplete";
 import { Prisma, User } from "@prisma/client";
 import { ExperienceTicker } from "@/components/ExperienceTicker";
-import { TaskTicker } from "@/components/TaskTicker";
-import prisma from "../lib/prisma";
 import { TaskTickerStatic } from "@/components/TaskTickerStatic";
 
 export default async function Page() {
