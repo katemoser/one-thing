@@ -32,26 +32,37 @@ const RANGE_TO_DESCRIPTION = {
     "YEAR": "this year",
     "ALL": "since you started"
 }
-
+/**
+ * This isn't doing quite what I want it to do
+ *
+ * It needs to get updated any time a new assignment is added
+ */
 export function TaskTicker({ username }: TaskTickerProps) {
 
-    const [range, setRange] = useState<TimeRange>("MONTH");
+    const [range, setRange] = useState<TimeRange>("TODAY");
     const [numTasks, setNumTasks] = useState(0);
 
     console.log("time ticker running. range =", range)
 
-    useEffect(function getTasksOnRangeChange() {
-        async function getTasks() {
+    /** runs whenever the range is changed -- gets completed assignments from that range
+     * TODO: deal with loading?
+     *
+     * TODO: how do i make sure this gets updated when a task is done??
+     *          could wrap it in a controller/dashboard component?
+     *          could pass all assignments (fetched in parent) and filter here based on state <== maybe the way to go
+     *
+     */
+    useEffect(function getAssignmentsOnRangeChange() {
+        async function getAssignments() {
             const [startDate, endDate] = getDatesForTimeRange(range);
             console.log("start:", startDate, "end:", endDate);
             const completedAssignments = await getCompletedAssignments(username, startDate, endDate)
             setNumTasks(completedAssignments.length);
         }
 
-        getTasks()
+        getAssignments()
 
     }, [range]);
-    // const completed = await getCompletedAssignments(username);
 
     function changeRange(){
         setRange(curr => RANGE_FLOW[curr] as TimeRange);

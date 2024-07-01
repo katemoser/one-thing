@@ -28,7 +28,7 @@ async function getCurrUser() {
  *
  * TODO: fix so takes in range? or takes in "type"
 */
-async function getCompletedAssignments(username: string, startDate: Date, endDate: Date) {
+async function getCompletedAssignments(username: string, startDate=new Date(2020,0,1), endDate = new Date()) {
 
     const completed = await prisma.assignment.findMany({
         where: {

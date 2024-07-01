@@ -1,16 +1,20 @@
-import { getCurrUser, selectNextAssignment } from "../actions";
+import { getCompletedAssignments, getCurrUser, selectNextAssignment } from "../actions";
 import { AssignmentCard } from "@/components/Assignment";
 import { AllComplete } from "@/components/AllComplete";
-import { User } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import { ExperienceTicker } from "@/components/ExperienceTicker";
-import { Card } from "@/components/ui/card";
 import { TaskTicker } from "@/components/TaskTicker";
+import prisma from "../lib/prisma";
+import { TaskTickerStatic } from "@/components/TaskTickerStatic";
 
 export default async function Page() {
 
     const currUser = await getCurrUser() as User;
     console.log("current user:", currUser);
     // function to find tasks completed in date range for task ticker:
+
+    const completed = await getCompletedAssignments(currUser.username);
+
     // get next assignment
     const next = await selectNextAssignment(currUser.username);
 
@@ -20,13 +24,10 @@ export default async function Page() {
         <div className="container p-8 grid justify-items-center">
             <div className="flex flex-row gap-2">
 
-                {/* <Card>user level</Card> */}
-
-
                 <ExperienceTicker exp={currUser.exp} />
 
-                <TaskTicker username={currUser.username} />
-                {/* <Card>Num Tasks</Card> */}
+                <TaskTickerStatic numTasks={completed.length} />
+
 
             </div>
 
