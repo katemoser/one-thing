@@ -4,10 +4,12 @@ import { AllComplete } from "@/components/AllComplete";
 import { User } from "@prisma/client";
 import { ExperienceTicker } from "@/components/ExperienceTicker";
 import { Card } from "@/components/ui/card";
+import { TaskTicker } from "@/components/TaskTicker";
 
 export default async function Page() {
 
     const currUser = await getCurrUser() as User;
+    // get completed assignments
     console.log("current user:", currUser);
 
     const next = await selectNextAssignment(currUser.username);
@@ -23,7 +25,7 @@ export default async function Page() {
 
                 <ExperienceTicker exp={currUser.exp} />
 
-
+                <TaskTicker username={currUser.username} />
                 {/* <Card>Num Tasks</Card> */}
 
             </div>

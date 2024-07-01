@@ -18,8 +18,26 @@ async function getCurrUser() {
     return await prisma.user.findFirst({
         where: {
             username: "Kate"
-        }
+        },
     });
+}
+
+/******************* Assignment Actions */
+
+/** returns all completed assignments
+ *
+ * TODO: fix so takes in range? or takes in
+*/
+async function getCompletedAssignments(username: string){
+
+    return await prisma.assignment.findMany({
+        where:{
+            status: "COMPLETED",
+            userTask:{
+                username: username
+            }
+        }
+    })
 }
 /**
  * takes a username and finds the next thing they should be assigned
@@ -266,5 +284,6 @@ export {
     cancelAssignment,
     selectNextAssignment,
     // calculateExp,
+    getCompletedAssignments,
     getCurrUser
 };
