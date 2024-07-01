@@ -26,18 +26,25 @@ async function getCurrUser() {
 
 /** returns all completed assignments
  *
- * TODO: fix so takes in range? or takes in
+ * TODO: fix so takes in range? or takes in "type"
 */
-async function getCompletedAssignments(username: string){
+async function getCompletedAssignments(username: string, startDate: Date, endDate: Date) {
 
-    return await prisma.assignment.findMany({
-        where:{
+    const completed = await prisma.assignment.findMany({
+        where: {
             status: "COMPLETED",
-            userTask:{
+            completedAt: {
+                gte: startDate,
+                lte: endDate,
+            },
+            userTask: {
                 username: username
             }
         }
-    })
+    });
+
+    console.log("completed:", completed);
+    return completed;
 }
 /**
  * takes a username and finds the next thing they should be assigned
@@ -203,9 +210,9 @@ async function completeAssignment(assignmentId: number) {
             username: currUser.username,
         },
         data: {
-            exp: {increment: exp}
+            exp: { increment: exp }
         }
-    })
+    });
     console.log("assignment completed:", completed);
     revalidatePath("/go");
     // return completed;

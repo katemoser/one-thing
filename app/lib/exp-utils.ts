@@ -1,4 +1,5 @@
 import { BASE_DIFFICULTY_MULTIPLIER, FIRST_TIME_BONUS, POSTPONEMENT_MULTIPLIER } from "@/constants";
+import { TimeRange } from "./definitions";
 
 
 //TODO: change to base exp
@@ -25,4 +26,40 @@ function calculateExp(difficulty: number, numPostponements: number):number {
 
 //TODO: need calc bonuses function and calc totalExp function
 
-export {calculateExp}
+function getDatesForTimeRange(range: TimeRange): [Date, Date]{
+  console.log("in getDatesForTimeRange. range:", range)
+
+  const now = new Date(); // end date will always be now
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const day = now.getDay();
+
+  let start = new Date(year, month, day); // set to today, without time.
+
+  switch(range){
+    case "ALL":
+      console.log("range is ALL")
+      start = new Date("1-1-2020"); // set to before this app was created TODO:fix
+      break;
+    case "YEAR":
+      console.log("range is YEAR")
+      start = new Date(year, 0, 1); // first day of this year
+      break;
+    case "MONTH":
+      console.log("range is MONTH")
+      start = new Date(year, month, 1); // first day of this month
+      break;
+    case "WEEK":
+      console.log("range is WEEK")
+      const today = new Date(year, month, day);
+      // want to set start to monday closest
+      // found on stack overflow: https://stackoverflow.com/questions/4156434/javascript-get-the-first-day-of-the-week-from-current-date
+      const diff = today.getDate() - day + (day === 0 ? -6 : 1); //adjust for monday as first day of week
+      start = new Date(today.setDate(diff));
+      break;
+  }
+
+  return [start, now]
+}
+
+export {calculateExp, getDatesForTimeRange}

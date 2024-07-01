@@ -9,9 +9,9 @@ import { TaskTicker } from "@/components/TaskTicker";
 export default async function Page() {
 
     const currUser = await getCurrUser() as User;
-    // get completed assignments
     console.log("current user:", currUser);
-
+    // function to find tasks completed in date range for task ticker:
+    // get next assignment
     const next = await selectNextAssignment(currUser.username);
 
     console.log("THIS IS THE NEXT ASSIGNMENT:", next);

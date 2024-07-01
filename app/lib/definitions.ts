@@ -12,3 +12,5 @@ export type Assignment = {
   difficulty: number;
   numPostponements: number
 }
+
+export type TimeRange = "TODAY" | "WEEK" | "MONTH" | "YEAR" |"ALL";
