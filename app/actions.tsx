@@ -18,8 +18,33 @@ async function getCurrUser() {
     return await prisma.user.findFirst({
         where: {
             username: "Kate"
+        },
+    });
+}
+
+/******************* Assignment Actions */
+
+/** returns all completed assignments
+ *
+ * TODO: fix so takes in range? or takes in "type"
+*/
+async function getCompletedAssignments(username: string, startDate=new Date(2020,0,1), endDate = new Date()) {
+
+    const completed = await prisma.assignment.findMany({
+        where: {
+            status: "COMPLETED",
+            completedAt: {
+                gte: startDate,
+                lte: endDate,
+            },
+            userTask: {
+                username: username
+            }
         }
     });
+
+    console.log("completed:", completed);
+    return completed;
 }
 /**
  * takes a username and finds the next thing they should be assigned
@@ -185,9 +210,9 @@ async function completeAssignment(assignmentId: number) {
             username: currUser.username,
         },
         data: {
-            exp: {increment: exp}
+            exp: { increment: exp }
         }
-    })
+    });
     console.log("assignment completed:", completed);
     revalidatePath("/go");
     // return completed;
@@ -266,5 +291,6 @@ export {
     cancelAssignment,
     selectNextAssignment,
     // calculateExp,
+    getCompletedAssignments,
     getCurrUser
 };
