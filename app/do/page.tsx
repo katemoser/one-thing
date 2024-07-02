@@ -4,6 +4,7 @@ import { AllComplete } from "@/components/AllComplete";
 import { Prisma, User } from "@prisma/client";
 import { ExperienceTicker } from "@/components/ExperienceTicker";
 import { TaskTickerStatic } from "@/components/TaskTickerStatic";
+import { LevelTicker } from "@/components/LevelTicker";
 
 export default async function Page() {
 
@@ -22,6 +23,7 @@ export default async function Page() {
         <div className="container p-8 grid justify-items-center">
             <div className="flex flex-row gap-2">
 
+                <LevelTicker exp={currUser.exp} />
                 <ExperienceTicker exp={currUser.exp} />
 
                 <TaskTickerStatic numTasks={completed.length} />
