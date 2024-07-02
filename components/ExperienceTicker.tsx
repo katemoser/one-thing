@@ -1,3 +1,4 @@
+import { getExpToNextLevel, getLevel } from "@/app/lib/exp-utils";
 import {
     Card,
     CardContent,
@@ -7,12 +8,17 @@ import {
     CardFooter
 } from "./ui/card";
 import { Progress } from "./ui/progress";
+import { LEVEL_BREAKPOINTS } from "@/constants";
 
 type ExperienceTickerProps = {
     exp: number,
-}
+};
 
-export function ExperienceTicker({exp}: ExperienceTickerProps) {
+export function ExperienceTicker({ exp }: ExperienceTickerProps) {
+
+    const level = getLevel(exp);
+    const expThisLevel = LEVEL_BREAKPOINTS[level + 1] - LEVEL_BREAKPOINTS[level];
+    const expToNext = getExpToNextLevel(exp);
     return (
         <Card x-chunk="dashboard-05-chunk-1">
             <CardHeader className="pb-2">
@@ -21,11 +27,14 @@ export function ExperienceTicker({exp}: ExperienceTickerProps) {
             </CardHeader>
             <CardContent>
                 <div className="text-xs text-muted-foreground">
-                    75 points to next level
+                    {expToNext} points to next level
                 </div>
             </CardContent>
             <CardFooter>
-                <Progress value={25} aria-label="25% increase" />
+                {expToNext &&
+
+                    <Progress value={expThisLevel - expToNext} max={expThisLevel} aria-label="points-left" />
+                }
             </CardFooter>
         </Card>
     );
