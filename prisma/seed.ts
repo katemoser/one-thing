@@ -14,6 +14,12 @@ async function main() {
       { title: "Do Laundry" },
       { title: "Drink Water" },
       { title: "Vacuum" },
+      { title: "Clean kitchen surfaces" },
+      { title: "Moisturize" },
+      { title: "Go outside" },
+      { title: "Eat a vegetable" },
+      { title: "Write in journal" },
+      { title: "Clear out email inbox" },
     ]
   });
 
