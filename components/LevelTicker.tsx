@@ -7,7 +7,6 @@ import {
     CardDescription,
     CardFooter
 } from "./ui/card";
-import { Progress } from "./ui/progress";
 
 type ExperienceTickerProps = {
     exp: number,
