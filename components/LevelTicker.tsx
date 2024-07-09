@@ -7,13 +7,12 @@ import {
     CardDescription,
     CardFooter
 } from "./ui/card";
-import { Progress } from "./ui/progress";
 
-type ExperienceTickerProps = {
+type LevelTickerProps = {
     exp: number,
 };
 
-export function LevelTicker({ exp }: ExperienceTickerProps) {
+export function LevelTicker({ exp }: LevelTickerProps) {
 
     const level = getLevel(exp);
     return (
