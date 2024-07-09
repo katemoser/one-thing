@@ -8,11 +8,11 @@ import {
     CardFooter
 } from "./ui/card";
 
-type ExperienceTickerProps = {
+type LevelTickerProps = {
     exp: number,
 };
 
-export function LevelTicker({ exp }: ExperienceTickerProps) {
+export function LevelTicker({ exp }: LevelTickerProps) {
 
     const level = getLevel(exp);
     return (
