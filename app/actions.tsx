@@ -22,6 +22,29 @@ async function getCurrUser() {
     });
 }
 
+/**returns json like */
+async function getUser(username: string){
+    return await prisma.user.findFirstOrThrow({
+        where:{
+            username: username
+        },
+        include: {
+            tasks: {
+                select: {
+                    id: true,
+                    difficulty:true,
+                    schedule: true,
+                    task: {
+                        select:{
+                            title: true
+                        }
+                    }
+                }
+            }
+        }
+    })
+}
+
 /******************* Assignment Actions */
 
 /** returns all completed assignments
@@ -292,5 +315,6 @@ export {
     selectNextAssignment,
     // calculateExp,
     getCompletedAssignments,
-    getCurrUser
+    getCurrUser,
+    getUser
 };

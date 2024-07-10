@@ -1,0 +1,1 @@
+/** GET all assignments for this user */
