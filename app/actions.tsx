@@ -41,7 +41,7 @@ async function getUserForHomepage(username: string) {
         }
     });
 
-    const completedAssignments = assignments.filter(a=> a.completedAt !== null);
+    const completedAssignments = assignments.filter(a=> a.status === "COMPLETED");
     // const activeAssignments = assignments.filter(a=> a.completedAt === null);
     const level = getLevel(user.exp);
 
