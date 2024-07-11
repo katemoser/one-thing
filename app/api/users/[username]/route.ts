@@ -1,5 +1,5 @@
 
-import { getUser } from "@/app/actions";
+import { getUserForHomepage } from "@/app/actions";
 
 /**GET: gets detailed information about a single user
  *
@@ -9,15 +9,17 @@ import { getUser } from "@/app/actions";
  *    email,
  *    createdAt,
  *    exp,
- *    tasks: [usertask, ...]
+ *    level,
+ *    assignments: []
  *  }
  * }
 */
 export async function GET(request: Request, { params }: { params: { username: string; }; }) {
 
+  console.log("request headers IN ROUTE:", request.headers)
   try {
 
-    const user = await getUser(params.username);
+    const user = await getUserForHomepage(params.username);
     return Response.json({ user });
   } catch (err) {
     return new Response(JSON.stringify({ error: err }), {

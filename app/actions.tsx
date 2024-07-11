@@ -5,7 +5,7 @@ import prisma from "./lib/prisma";
 import _ from 'lodash';
 // import { BASE_DIFFICULTY_MULTIPLIER, FIRST_TIME_BONUS, POSTPONEMENT_MULTIPLIER } from "@/constants";
 import { User } from "@prisma/client";
-import { calculateExp } from "./lib/exp-utils";
+import { calculateExp, getLevel } from "./lib/exp-utils";
 import { FIRST_TIME_BONUS } from "@/constants";
 
 // TODO: find better datetime library -- moment.js?
@@ -22,27 +22,38 @@ async function getCurrUser() {
     });
 }
 
-/**returns json like */
-async function getUser(username: string){
-    return await prisma.user.findFirstOrThrow({
-        where:{
+/**returns json like
+ *
+ * TODO: come back to this guy... maybe we just need the number of assignments?
+*/
+async function getUserForHomepage(username: string) {
+    const user =  await prisma.user.findFirstOrThrow({
+        where: {
             username: username
         },
-        include: {
-            tasks: {
-                select: {
-                    id: true,
-                    difficulty:true,
-                    schedule: true,
-                    task: {
-                        select:{
-                            title: true
-                        }
-                    }
-                }
+    });
+
+    const assignments = await prisma.assignment.findMany({
+        where:{
+            userTask:{
+                username: username
             }
         }
-    })
+    });
+
+    const completedAssignments = assignments.filter(a=> a.completedAt !== null);
+    // const activeAssignments = assignments.filter(a=> a.completedAt === null);
+    const level = getLevel(user.exp);
+
+    return{
+        username : user.username,
+        email: user.email,
+        createdAt: user.createdAt,
+        exp: user.exp,
+        level,
+        completedAssignments,
+        // activeAssignments,
+    }
 }
 
 /******************* Assignment Actions */
@@ -51,7 +62,7 @@ async function getUser(username: string){
  *
  * TODO: fix so takes in range? or takes in "type"
 */
-async function getCompletedAssignments(username: string, startDate=new Date(2020,0,1), endDate = new Date()) {
+async function getCompletedAssignments(username: string, startDate = new Date(2020, 0, 1), endDate = new Date()) {
 
     const completed = await prisma.assignment.findMany({
         where: {
@@ -316,5 +327,5 @@ export {
     // calculateExp,
     getCompletedAssignments,
     getCurrUser,
-    getUser
+    getUserForHomepage
 };
