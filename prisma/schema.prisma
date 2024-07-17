@@ -30,7 +30,7 @@ model UserTask { //many to many between user and task
     user User @relation(fields: [username], references: [username])
     taskId Int
     task Task @relation(fields: [taskId], references:[id])
-    schedule Schedule @default(EVERYDAY) // TODO: this is going to get updated to be something like cronjob!
+    schedule Int @default(1) // represents every X days, 1 == daily, 7 == weekly, etc. TODO: 0 can be "anytime"?
     assignments Assignment[]
     difficulty Int @default(3)
 }
@@ -54,14 +54,15 @@ enum TaskType {
     PERSONAL
 }
 
-enum Schedule {
-    EVERYDAY
-    EVERYWEEK
-    EVERYMONTH
-}
+// enum Schedule {
+//     EVERYDAY
+//     EVERYWEEK
+//     EVERYMONTH
+// }
 
 enum AssignmentStatus {
     COMPLETED
     PENDING
     CANCELLED
+    EXPIRED
 }
