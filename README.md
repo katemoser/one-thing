@@ -9,7 +9,13 @@ more managable routine that you are more likely to stick to.
 
 ## Getting Started
 
-1. Set up your dev database:
+0. Set up your dev database
+
+1. In ``.env`` add the following:
+
+```bash
+DATABASE_URL="postgresql://{{your-db-uri-here}}"
+```
 
 2. Seed database:
 
