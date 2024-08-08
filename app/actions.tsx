@@ -192,6 +192,7 @@ async function updateAssignments(username: string) {
     const now = new Date();
 
     for (let task of userTasks) {
+        console.log("userTask:", task)
         if (task.schedule === 1) {
             const todayAssignments = task.assignments.filter(a => {
                 return a.assignedAt.toDateString() === now.toDateString();

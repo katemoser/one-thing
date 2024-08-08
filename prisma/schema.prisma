@@ -30,7 +30,8 @@ model UserTask { //many to many between user and task
     user User @relation(fields: [username], references: [username])
     taskId Int
     task Task @relation(fields: [taskId], references:[id])
-    schedule Schedule @default(EVERYDAY) // TODO: this is going to get updated to be something like cronjob!
+    // schedule Schedule @default(EVERYDAY) // TODO: this is going to get updated to be something like cronjob!
+    schedule Int @default(1) // TODO: this is going to get updated to be something like cronjob!
     assignments Assignment[]
     difficulty Int @default(3)
 }
