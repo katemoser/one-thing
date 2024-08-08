@@ -68,7 +68,7 @@ export function AssignmentCard({ assignment }: { assignment: Assignment; }) {
                 <Button
                     variant="destructive"
                     onClick={() => cancelAssignment(assignment.id)}>
-                    I won't do this today
+                    Not Today
                 </Button>
             </CardFooter>
         </Card>

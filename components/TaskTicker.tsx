@@ -64,7 +64,7 @@ export function TaskTicker({ username }: TaskTickerProps) {
 
         getAssignments()
 
-    }, [range]);
+    }, [range, username]);
 
     function changeRange(){
         setRange(curr => RANGE_FLOW[curr] as TimeRange);
